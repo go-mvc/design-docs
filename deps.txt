@@ -1,0 +1,6 @@
+glossaries
+mfirstuc
+etoolbox
+xfor
+datatool
+substr
