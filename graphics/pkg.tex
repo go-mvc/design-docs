@@ -1,0 +1,61 @@
+\documentclass[preview]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{arrows,shapes}
+
+\begin{document}
+
+% golang colors
+\definecolor{blue}{RGB}{55,94,171}
+\definecolor{lblue}{RGB}{224,235,245}
+
+% default sans
+\renewcommand{\familydefault}{\sfdefault}
+
+
+\begin{tikzpicture}
+    \tikzstyle{every node}=[draw=blue,fill=lblue,ellipse,minimum width=100pt,
+    align=center]
+    \tikzset{
+        vertex/.style = {minimum size=1.5em},
+        edge/.style = {->,> = latex'},
+        image/.style 2 args = {
+            path picture = {
+                \node at (path picture bounding box.center) {
+                    \includegraphics[width=#1cm] {#2}};
+            }
+        },
+        Logo/.style = {
+            image = {2.4}{logo},
+            minimum width = 2cm,
+        }
+    }
+    % vertices
+    \node[vertex] (db) at  (2,0) {SQL Database};
+    \node[vertex] (orm) at  (2,1) {ORM};
+    \node[vertex] (api) at  (3,2) {API};
+
+    \node[vertex] (mux) at (10,4) {Mux};
+    \node[vertex] (rad) at (10,5) {Radix Tree};
+
+    \node[vertex] (tpl) at (2,5) {Template Renderer};
+    \node[vertex] (usr) at (2,6) {User Files};
+
+    \node[vertex,fill=none,minimum width=none,shape=rectangle,rounded corners=0.1cm]
+        (fw) at  (6,3.5)
+        {\includegraphics[width=3.5cm] {logoc}};
+    };
+    %\node[]{2}{logo} (lg) at  (5,4) {};
+
+    %edges
+    \draw[edge] (db) to (orm);
+    \draw[edge] (orm) to (api);
+    \draw[edge] (api) to (fw);
+
+    \draw[edge] (rad) to (mux);
+    \draw[edge] (mux) to (fw);
+
+    \draw[edge] (usr) to (tpl);
+    \draw[edge] (tpl) to (fw);
+\end{tikzpicture}
+
+\end{document}
