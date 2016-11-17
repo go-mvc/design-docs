@@ -1,23 +1,23 @@
-\documentclass[preview]{standalone}
+\documentclass[]{standalone}
 \usepackage{tikz}
+\usepackage{helvet}
 \usetikzlibrary{arrows,shapes}
 
-\begin{document}
+% default sans
+\renewcommand{\familydefault}{\sfdefault}
 
 % golang colors
 \definecolor{blue}{RGB}{55,94,171}
 \definecolor{lblue}{RGB}{224,235,245}
 
-% default sans
-\renewcommand{\familydefault}{\sfdefault}
 
+\begin{document}
 
 \begin{tikzpicture}
-    \tikzstyle{every node}=[draw=blue,fill=lblue,ellipse,minimum width=100pt,
-    align=center]
+    \tikzstyle{every node}=[draw=blue,fill=lblue,ellipse,align=center]
     \tikzset{
         vertex/.style = {minimum size=1.5em},
-        edge/.style = {->,> = latex'},
+        edge/.style = {thick, ->,> = latex'},
         image/.style 2 args = {
             path picture = {
                 \node at (path picture bounding box.center) {
@@ -26,7 +26,6 @@
         },
         Logo/.style = {
             image = {2.4}{logo},
-            minimum width = 2cm,
         }
     }
     % vertices
@@ -34,28 +33,45 @@
     \node[vertex] (orm) at  (2,1) {ORM};
     \node[vertex] (api) at  (3,2) {API};
 
-    \node[vertex] (mux) at (10,4) {Mux};
-    \node[vertex] (rad) at (10,5) {Radix Tree};
+    \node[vertex] (mux) at (10,2) {Mux};
+    \node[vertex] (rad) at (11.5,0.6) {Radix Tree};
+    \node[vertex] (net) at (9,1) {net/http};
+    \node[vertex] (cxt) at (12,1.6) {context};
 
-    \node[vertex] (tpl) at (2,5) {Template Renderer};
-    \node[vertex] (usr) at (2,6) {User Files};
+    \node[vertex] (tps) at (10,5) {Templates};
 
-    \node[vertex,fill=none,minimum width=none,shape=rectangle,rounded corners=0.1cm]
-        (fw) at  (6,3.5)
-        {\includegraphics[width=3.5cm] {logoc}};
-    };
-    %\node[]{2}{logo} (lg) at  (5,4) {};
+    \node[vertex] (tpl) at (4,5) {Template Checker};
+    \node[vertex] (ast) at (0.5,5.2) {go/ast};
+    \node[vertex] (htm) at (6,6) {html/template};
+    \node[vertex] (prs) at (1.8,6.2) {text/template/parse};
+    
+    \node[vertex] (dpl) at (12,3.5) {Deployment};
+
+    \node[fill=none,shape=rectangle,rounded corners=0.1cm]
+        (fw) at (6,3.5) {
+            \includegraphics[width=3.5cm] {logoc.png}
+        };
 
     %edges
     \draw[edge] (db) to (orm);
     \draw[edge] (orm) to (api);
-    \draw[edge] (api) to (fw);
+    \draw[edge,bend left=8] (api) to (fw);
+    \draw[edge,bend right=8] (api) to (mux);
 
+    \draw[edge] (net) to (mux);
+    \draw[edge] (cxt) to (mux);
     \draw[edge] (rad) to (mux);
-    \draw[edge] (mux) to (fw);
+    \draw[edge,bend right=8] (mux) to (fw);
 
-    \draw[edge] (usr) to (tpl);
-    \draw[edge] (tpl) to (fw);
+    \draw[edge] (ast) to (tpl);
+    \draw[edge] (htm) to (tpl);
+    \draw[edge] (prs) to (tpl);
+    \draw[edge,bend right=6] (tpl) to (fw);
+
+    \draw[edge] (htm) to (tps);
+    \draw[edge,bend left=8] (tps) to (fw);
+
+    \draw[edge] (dpl) to (fw);
 \end{tikzpicture}
 
 \end{document}
